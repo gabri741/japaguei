@@ -1,0 +1,14 @@
+type User {
+    id: ID!
+    email: String
+    senha: String
+    nome: String
+    cpf: String
+    cnpj: String
+}
+
+type Query {
+    getUser(uuid: ID!): User
+    listUsers: [User]
+    getUserByEmail(email: String!): User
+}
