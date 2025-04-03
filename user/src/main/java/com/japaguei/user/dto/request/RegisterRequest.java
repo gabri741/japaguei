@@ -1,8 +1,9 @@
 package com.japaguei.user.dto.request;
 
+import com.japaguei.user.dto.annotation.CpfOuCnpjObrigatorio;
 import jakarta.validation.constraints.*;
 
-
+@CpfOuCnpjObrigatorio
 public record RegisterRequest(
         @NotBlank(message = "O email não pode estar em branco")
         @Email(message = "Email inválido")
