@@ -14,12 +14,22 @@ import java.util.UUID;
 @AllArgsConstructor
 @NoArgsConstructor
 public  class User {
+
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private UUID id;
+
+    @Column(nullable = false, unique = true)
     private String email;
+
+    @Column(nullable = false, unique = true)
     private String senha;
+
     private String nome;
+
+    @Column(unique = true)
     private String cpf;
+
+    @Column(unique = true)
     private String cnpj;
 }
