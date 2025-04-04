@@ -1,0 +1,6 @@
+spring:
+  application:
+    name: user
+
+jwt:
+  secret: "oTGwNlGvyfdk5rU4SKvmf-cILcHSQnMsl12SwXP-4sY="
