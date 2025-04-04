@@ -11,6 +11,7 @@ import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -18,6 +19,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+
+import java.util.Map;
 
 @RestController
 @AllArgsConstructor
@@ -31,16 +34,36 @@ public class AuthController {
     private final PasswordEncoder passwordEncoder;
 
     @PostMapping("/login")
-    public ResponseEntity<String> login(@RequestBody @Valid LoginRequest loginRequest) {
-        Authentication authenticationRequest = UsernamePasswordAuthenticationToken.unauthenticated(loginRequest.email(), loginRequest.password());
-        this.authenticationManager.authenticate(authenticationRequest);
+    public ResponseEntity<Map<String, String>> login(@RequestBody @Valid LoginRequest loginRequest) {
+        try {
+            Authentication authenticationRequest = UsernamePasswordAuthenticationToken.unauthenticated(
+                    loginRequest.email(), loginRequest.password()
+            );
 
-        userDetailsService.loadUserByUsername(loginRequest.email());
+            // Tenta autenticar
+            authenticationManager.authenticate(authenticationRequest);
 
-        String token = jwtService.generateToken(loginRequest.email());
+            // Se autenticar, gera o token
+            String token = jwtService.generateToken(loginRequest.email());
 
-        return ResponseEntity.ok(token);
+            return ResponseEntity.ok(Map.of("token", token));
+
+        } catch (BadCredentialsException e) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                    .body(Map.of(
+                            "error", "Email ou senha inválidos",
+                            "message", "As credenciais fornecidas estão incorretas"
+                    ));
+
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(Map.of(
+                            "error", "Erro interno",
+                            "message", e.getMessage()
+                    ));
+        }
     }
+
 
 
     @PostMapping("/register")

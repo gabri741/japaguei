@@ -1,13 +1,10 @@
 package com.japaguei.user.domain.service;
 
-import com.japaguei.user.controllers.rest.AuthController;
 import com.japaguei.user.domain.model.User;
 import com.japaguei.user.domain.repository.UserRepository;
 import com.japaguei.user.dto.request.RegisterRequest;
 import com.japaguei.user.dto.response.UserResponseDTO;
 import lombok.AllArgsConstructor;
-import org.springframework.data.crossstore.ChangeSetPersister;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
